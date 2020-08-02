@@ -16,7 +16,12 @@ def scan_round(self):
 
     # fit the model
     from ..model.ingest_model import ingest_model
-    self.model_history, self.round_model = ingest_model(self)
+    try:
+        self.model_history, self.round_model = ingest_model(self)
+    except:
+        print('Model invalid!')
+        return self
+
     self.round_history.append(self.model_history.history)
 
     # handle logging of results
@@ -52,7 +57,7 @@ def scan_round(self):
 
         # try TF specific and pass for everyone else
         try:
-            from tensorflow.keras import backend as K
+            from keras import backend as K
             K.clear_session()
         except ImportError:
             pass
